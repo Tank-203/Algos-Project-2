@@ -1,6 +1,7 @@
 import random
 import sys
 import timeit
+import datetime
 
 sys.setrecursionlimit(10**6)
 
@@ -8,8 +9,7 @@ def bubble_sort(myList): # Bubble Sort Algorithm
     for i in range(len(myList)-1):
         for j in range(len(myList)-i-1):
             if myList[j] > myList[j + 1]:
-                myList[j], myList[j+1] = \
-                           myList[j + 1], myList[j]
+                myList[j], myList[j+1] = myList[j + 1], myList[j]
     return myList
 
 def merge_sort(m):
@@ -24,12 +24,10 @@ def merge_sort(m):
     right = merge_sort(right)
     return list(merge(left, right))
 
-
 def merge(left, right):
     result = []
     left_idx, right_idx = 0, 0
     while left_idx < len(left) and right_idx < len(right):
-        # change the direction of this comparison to change the direction of the sort
         if left[left_idx] <= right[right_idx]:
             result.append(left[left_idx])
             left_idx += 1
@@ -66,76 +64,69 @@ def quick_sort(array, begin=0, end=None):
 
     return quick_sort_recursion(array, begin, end)
 
-
-# A function to do counting sort of arr[] according to
-# the digit represented by exp.
 def countingSort(arr, exp1):
     n = len(arr)
-
-    # The output array elements that will have sorted arr
     output = [0] * (n)
-
-    # initialize count array as 0
     count = [0] * (10)
-
-    # Store count of occurrences in count[]
     for i in range(0, n):
         index = (arr[i] / exp1)
         count[int((index) % 10)] += 1
-
-    # Change count[i] so that count[i] now contains actual
-    #  position of this digit in output array
     for i in range(1, 10):
         count[i] += count[i - 1]
-
-        # Build the output array
     i = n - 1
     while i >= 0:
         index = (arr[i] / exp1)
         output[count[int((index) % 10)] - 1] = arr[i]
         count[int((index) % 10)] -= 1
         i -= 1
-
-    # Copying the output array to arr[],
-    # so that arr now contains sorted numbers
-    i = 0
     for i in range(0, len(arr)):
         arr[i] = output[i]
 
 def radix_sort(arr):
-    # Find the maximum number to know number of digits
     max1 = max(arr)
-
-    # Do counting sort for every digit. Note that instead
-    # of passing digit number, exp is passed. exp is 10^i
-    # where i is current digit number
     exp = 1
     while max1 // exp > 0:
         countingSort(arr, exp)
         exp *= 10
 
-# Generate Test Data
 def generate_test_data(size, case):
-    if case == 'best':
-        return list(range(size))  # Already sorted
+    if case == 'best': # Creates a sorted list
+        return list(range(size))
     elif case == 'worst':
-        return list(range(size, 0, -1))  # Reverse sorted
-    else:  # 'average'
-        return random.sample(range(size), size)  # Random order
+        return list(range(size, 0, -1)) # Creates a reverse sorted list
+    else:
+        return random.sample(range(size), size) # Creates a random list
 
-# Time Execution
-def time_sorting_algorithm(algorithm, arr):
+def time_sorting_algorithm(algorithm, arr, case, size):
+    arr_copy = arr.copy()
+    start_time = timeit.default_timer()
     if algorithm == 'bubble_sort':
-        stmt = lambda: bubble_sort(arr)
+        sort_func = lambda: bubble_sort(arr)
     elif algorithm == 'merge_sort':
-        stmt = lambda: merge_sort(arr)
+        sort_func = lambda: merge_sort(arr)
     elif algorithm == 'quick_sort':
-        stmt = lambda: quick_sort(arr)
+        sort_func = lambda: quick_sort(arr)
     elif algorithm == 'radix_sort':
-        stmt = lambda: radix_sort(arr)
+        sort_func = lambda: radix_sort(arr)
     else:
         raise ValueError("Invalid algorithm")
-    return timeit.timeit(stmt, number=1)
+
+    time_taken = timeit.timeit(sort_func, number=1)
+
+    current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    end_time = timeit.default_timer()
+    file_name = f"files/{current_time}.txt"
+    with open(file_name, 'a') as file:
+        file.write(f"Algorithm: {algorithm}\n")
+        file.write(f"Case: {case}\n")
+        file.write(f"Size: {size}\n")
+        file.write(f"Time taken: {end_time - start_time} seconds\n")
+        if size <= 100:
+            file.write(f"Array before sorting: {arr_copy}\n")
+            file.write(f"Array after sorting: {arr}\n")
+        file.write("\n")
+
+    return time_taken
 
 def menu():
     print("Welcome to the test suite of selected sorting algorithms!")
@@ -160,8 +151,24 @@ def menu():
                                     case = ['best', 'average', 'worst'][case_choice - 1]
                                     for size in [100, 1000, 10000]:
                                         data_set = generate_test_data(size, case)
-                                        time_taken = time_sorting_algorithm('bubble_sort', data_set)
+                                        time_taken = time_sorting_algorithm('bubble_sort', data_set, case, size)
                                         print(f"In {case.capitalize()} Case for N = {size}, it takes '{time_taken}' seconds")
+
+                                    while True:
+                                        print("Would you like to input another N? [Y/N]")
+                                        user_input = input(">> ").upper()
+                                        if user_input == 'N':
+                                            break
+                                        elif user_input == 'Y':
+                                            print("What is N?")
+                                            n = int(input(">> "))
+                                            custom_data_set = generate_test_data(n, case)
+                                            start_time = timeit.default_timer()
+                                            time_taken = time_sorting_algorithm('bubble_sort', custom_data_set, case, n)
+                                            end_time = timeit.default_timer()
+                                            print(f"In {case.capitalize()} Case for N = {n}, it takes '{end_time - start_time}' seconds")
+                                        else:
+                                            print("Invalid input")
                             else:
                                 print("Invalid selection. Please enter a number between 1 and 4.")
                         except ValueError:
@@ -179,8 +186,25 @@ def menu():
                                     case = ['best', 'average', 'worst'][case_choice - 1]
                                     for size in [100, 1000, 10000]:
                                         data_set = generate_test_data(size, case)
-                                        time_taken = time_sorting_algorithm('merge_sort', data_set)
+                                        time_taken = time_sorting_algorithm('merge_sort', data_set, case, size)
                                         print(f"In {case.capitalize()} Case for N = {size}, it takes '{time_taken}' seconds")
+
+                                    while True:
+                                        print("Would you like to input another N? [Y/N]")
+                                        user_input = input(">> ").upper()
+                                        if user_input == 'N':
+                                            break
+                                        elif user_input == 'Y':
+                                            print("What is N?")
+                                            n = int(input(">> "))
+                                            custom_data_set = generate_test_data(n, case)
+                                            start_time = timeit.default_timer()
+                                            time_taken = time_sorting_algorithm('merge_sort', custom_data_set, case, n)
+                                            end_time = timeit.default_timer()
+                                            print(
+                                                f"In {case.capitalize()} Case for N = {n}, it takes '{end_time - start_time}' seconds")
+                                        else:
+                                            print("Invalid input")
                             else:
                                 print("Invalid selection. Please enter a number between 1 and 4.")
                         except ValueError:
@@ -198,8 +222,25 @@ def menu():
                                     case = ['best', 'average', 'worst'][case_choice - 1]
                                     for size in [100, 1000, 10000]:
                                         data_set = generate_test_data(size, case)
-                                        time_taken = time_sorting_algorithm('quick_sort', data_set)
+                                        time_taken = time_sorting_algorithm('quick_sort', data_set, case, size)
                                         print(f"In {case.capitalize()} Case for N = {size}, it takes '{time_taken}' seconds")
+
+                                    while True:
+                                        print("Would you like to input another N? [Y/N]")
+                                        user_input = input(">> ").upper()
+                                        if user_input == 'N':
+                                            break
+                                        elif user_input == 'Y':
+                                            print("What is N?")
+                                            n = int(input(">> "))
+                                            custom_data_set = generate_test_data(n, case)
+                                            start_time = timeit.default_timer()
+                                            time_taken = time_sorting_algorithm('quick_sort', custom_data_set, case, n)
+                                            end_time = timeit.default_timer()
+                                            print(
+                                                f"In {case.capitalize()} Case for N = {n}, it takes '{end_time - start_time}' seconds")
+                                        else:
+                                            print("Invalid input")
                             else:
                                 print("Invalid selection. Please enter a number between 1 and 4.")
                         except ValueError:
@@ -217,8 +258,24 @@ def menu():
                                     case = ['best', 'average', 'worst'][case_choice - 1]
                                     for size in [100, 1000, 10000]:
                                         data_set = generate_test_data(size, case)
-                                        time_taken = time_sorting_algorithm('radix_sort', data_set)
+                                        time_taken = time_sorting_algorithm('radix_sort', data_set, case, size)
                                         print(f"In {case.capitalize()} Case for N = {size}, it takes '{time_taken}' seconds")
+
+                                    while True:
+                                        print("Would you like to input another N? [Y/N]")
+                                        user_input = input(">> ").upper()
+                                        if user_input == 'N':
+                                            break
+                                        elif user_input == 'Y':
+                                            print("What is N?")
+                                            n = int(input(">> "))
+                                            custom_data_set = generate_test_data(n, case)
+                                            start_time = timeit.default_timer()
+                                            time_taken = time_sorting_algorithm('radix_sort', custom_data_set, case, n)
+                                            end_time = timeit.default_timer()
+                                            print(f"In {case.capitalize()} Case for N = {n}, it takes '{end_time - start_time}' seconds")
+                                        else:
+                                            print("Invalid input")
                             else:
                                 print("Invalid selection. Please enter a number between 1 and 4.")
                         except ValueError:
