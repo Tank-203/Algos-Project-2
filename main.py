@@ -1,5 +1,4 @@
-import os
-import random, time
+import random
 import sys
 import timeit
 
