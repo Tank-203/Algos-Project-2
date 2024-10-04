@@ -1,7 +1,11 @@
 import os
 import random, time
+import sys
+import timeit
 
-def bubbleSort(myList): # Bubble Sort Algorithm
+sys.setrecursionlimit(10**6)
+
+def bubble_sort(myList): # Bubble Sort Algorithm
     for i in range(len(myList)-1):
         for j in range(len(myList)-i-1):
             if myList[j] > myList[j + 1]:
@@ -40,8 +44,28 @@ def merge(left, right):
         result.extend(right[right_idx:])
     return result
 
-def quick_sort():
-    return
+def partition(arr, begin, end):
+    pivot_idx = begin
+    for i in range(begin+1, end+1):
+        if arr[i] <= arr[begin]:
+            pivot_idx += 1
+            arr[i], arr[pivot_idx] = arr[pivot_idx], arr[i]
+    arr[pivot_idx], arr[begin] = arr[begin], arr[pivot_idx]
+    return pivot_idx
+
+def quick_sort_recursion(array, begin, end):
+    if begin >= end:
+        return
+
+    pivot_idx = partition(array, begin, end)
+    quick_sort_recursion(array, begin, pivot_idx-1)
+    quick_sort_recursion(array, pivot_idx+1, end)
+
+def quick_sort(array, begin=0, end=None):
+    if end is None:
+        end = len(array) - 1
+
+    return quick_sort_recursion(array, begin, end)
 
 
 # A function to do counting sort of arr[] according to
@@ -91,110 +115,113 @@ def radix_sort(arr):
         countingSort(arr, exp)
         exp *= 10
 
+# Generate Test Data
+def generate_test_data(size, case):
+    if case == 'best':
+        return list(range(size))  # Already sorted
+    elif case == 'worst':
+        return list(range(size, 0, -1))  # Reverse sorted
+    else:  # 'average'
+        return random.sample(range(size), size)  # Random order
+
+# Time Execution
+def time_sorting_algorithm(algorithm, arr):
+    if algorithm == 'bubble_sort':
+        stmt = lambda: bubble_sort(arr)
+    elif algorithm == 'merge_sort':
+        stmt = lambda: merge_sort(arr)
+    elif algorithm == 'quick_sort':
+        stmt = lambda: quick_sort(arr)
+    elif algorithm == 'radix_sort':
+        stmt = lambda: radix_sort(arr)
+    else:
+        raise ValueError("Invalid algorithm")
+    return timeit.timeit(stmt, number=1)
+
 def menu():
+    print("Welcome to the test suite of selected sorting algorithms!")
     while True:
         try:
-            print("Welcome to the test suite of selected sorting algorithms!")
             print("Please select the sorting algorithm you want to test:\n\t1. Bubble Sort\n\t2. Merge Sort\n\t3. Quick Sort\n\t4. Radix Sort\n\t5. Quit")
-            print(">> ", end="")
-            user_type = int(input())
-            if user_type in [1, 2, 3, 4, 5]:
-                if user_type == 5:
+            algorithm_choice = int(input(">> "))
+            if algorithm_choice in [1, 2, 3, 4, 5]:
+                if algorithm_choice == 5:
                     print("Goodbye!")
                     break
-                elif user_type == 1:
+                elif algorithm_choice == 1:
                     while True:
                         try:
                             print("Case Scenarios for Bubble Sort")
                             print("\t1. Best Case\n\t2. Average Case\n\t3. Worst Case\n\t4. Back")
-                            print(">> ", end="")
-                            user_choice = int(input())
-                            if user_choice in [1, 2, 3, 4]:
-                                if user_choice == 1:
-                                    print("Enter the message you would like to send:")
-                                    print(">> ", end="")
-                                    message = input()
-                                elif user_choice == 2:
-                                    return
-                                elif user_choice == 3:
+                            case_choice = int(input(">> "))
+                            if case_choice in [1, 2, 3, 4]:
+                                if case_choice == 4:
                                     break
+                                else:
+                                    case = ['best', 'average', 'worst'][case_choice - 1]
+                                    for size in [100, 1000, 10000]:
+                                        data_set = generate_test_data(size, case)
+                                        time_taken = time_sorting_algorithm('bubble_sort', data_set)
+                                        print(f"In {case.capitalize()} Case for N = {size}, it takes '{time_taken}' seconds")
                             else:
-                                print("Invalid selection. Please enter a number between 1 and 3.")
+                                print("Invalid selection. Please enter a number between 1 and 4.")
                         except ValueError:
                             print("Invalid input. Please enter a valid number.")
-                elif user_type == 2:
+                elif algorithm_choice == 2:
                     while True:
                         try:
                             print("Case Scenarios for Merge Sort")
                             print("\t1. Best Case\n\t2. Average Case\n\t3. Worst Case\n\t4. Back")
-                            print(">> ", end="")
-                            user_choice = int(input())
-                            if user_choice in [1, 2, 3, 4]:
-                                if user_choice == 1:
-                                    return
-                                elif user_choice == 2:
-                                    print("Enter a message:")
-                                    print(">> ", end="")
-                                    message = input()
-
-                                    pass
-                                elif user_choice == 3:
-                                    # Method call to show keys
-
-                                    pass
-                                elif user_choice == 4:
+                            case_choice = int(input(">> "))
+                            if case_choice in [1, 2, 3, 4]:
+                                if case_choice == 4:
                                     break
+                                else:
+                                    case = ['best', 'average', 'worst'][case_choice - 1]
+                                    for size in [100, 1000, 10000]:
+                                        data_set = generate_test_data(size, case)
+                                        time_taken = time_sorting_algorithm('merge_sort', data_set)
+                                        print(f"In {case.capitalize()} Case for N = {size}, it takes '{time_taken}' seconds")
                             else:
-                                print("Invalid selection. Please enter a number between 1 and 5.")
+                                print("Invalid selection. Please enter a number between 1 and 4.")
                         except ValueError:
                             print("Invalid input. Please enter a valid number.")
-                elif user_type == 3:
+                elif algorithm_choice == 3:
                     while True:
                         try:
                             print("Case Scenarios for Quick Sort")
                             print("\t1. Best Case\n\t2. Average Case\n\t3. Worst Case\n\t4. Back")
-                            print(">> ", end="")
-                            user_choice = int(input())
-                            if user_choice in [1, 2, 3, 4]:
-                                if user_choice == 1:
-                                    return
-                                elif user_choice == 2:
-                                    print("Enter a message:")
-                                    print(">> ", end="")
-                                    message = input()
-                                    pass
-                                elif user_choice == 3:
-                                    # Method call to show keys
-                                    pass
-                                elif user_choice == 4:
+                            case_choice = int(input(">> "))
+                            if case_choice in [1, 2, 3, 4]:
+                                if case_choice == 4:
                                     break
+                                else:
+                                    case = ['best', 'average', 'worst'][case_choice - 1]
+                                    for size in [100, 1000, 10000]:
+                                        data_set = generate_test_data(size, case)
+                                        time_taken = time_sorting_algorithm('quick_sort', data_set)
+                                        print(f"In {case.capitalize()} Case for N = {size}, it takes '{time_taken}' seconds")
                             else:
-                                print("Invalid selection. Please enter a number between 1 and 5.")
+                                print("Invalid selection. Please enter a number between 1 and 4.")
                         except ValueError:
                             print("Invalid input. Please enter a valid number.")
-                elif user_type == 4:
+                elif algorithm_choice == 4:
                     while True:
                         try:
                             print("Case Scenarios for Radix Sort")
                             print("\t1. Best Case\n\t2. Average Case\n\t3. Worst Case\n\t4. Back")
-                            print(">> ", end="")
-                            user_choice = int(input())
-                            if user_choice in [1, 2, 3, 4]:
-                                if user_choice == 1:
-                                    return
-                                elif user_choice == 2:
-                                    print("Enter a message:")
-                                    print(">> ", end="")
-                                    message = input()
-                                    pass
-                                elif user_choice == 3:
-                                    # Method call to show keys
-
-                                    pass
-                                elif user_choice == 4:
+                            case_choice = int(input(">> "))
+                            if case_choice in [1, 2, 3, 4]:
+                                if case_choice == 4:
                                     break
+                                else:
+                                    case = ['best', 'average', 'worst'][case_choice - 1]
+                                    for size in [100, 1000, 10000]:
+                                        data_set = generate_test_data(size, case)
+                                        time_taken = time_sorting_algorithm('radix_sort', data_set)
+                                        print(f"In {case.capitalize()} Case for N = {size}, it takes '{time_taken}' seconds")
                             else:
-                                print("Invalid selection. Please enter a number between 1 and 5.")
+                                print("Invalid selection. Please enter a number between 1 and 4.")
                         except ValueError:
                             print("Invalid input. Please enter a valid number.")
             else:
