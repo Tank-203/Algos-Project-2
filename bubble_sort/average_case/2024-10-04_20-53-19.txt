@@ -1,0 +1,5 @@
+Algorithm: bubble_sort
+Case: average
+Size: 50000
+Time taken: 141.4965702999616 seconds
+
