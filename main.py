@@ -105,9 +105,9 @@ def radix_sort(arr):  # Radix Sort Algorithm
         exp *= 10
 
 def generate_test_data(size, case):  # Generates test data for sorting algorithms
-    if case == 'best':  # Best case: sorted list
+    if case == 'sorted':  # Best case: sorted list
         return list(range(size))
-    elif case == 'worst':  # Worst case: reverse sorted list
+    elif case == 'reverse':  # Worst case: reverse sorted list
         return list(range(size, 0, -1))
     else:  # Average case: random list
         return random.sample(range(size), size)
@@ -170,11 +170,16 @@ def menu():  # Main menu for selecting sorting algorithm and test cases
                                 if case_choice == 4:
                                     break  # Go back to the main menu
                                 else:
-                                    case = ['best', 'average', 'worst'][case_choice - 1]
+                                    case = ['sorted', 'average', 'reverse'][case_choice - 1]
                                     for size in [100, 1000, 10000]:  # Test for different sizes
                                         data_set = generate_test_data(size, case)
                                         time_taken = time_sorting_algorithm('bubble_sort', data_set, case, size)
-                                        print(f"In {case.capitalize()} Case for N = {size}, it takes '{time_taken}' seconds")
+                                        if case == 'sorted':
+                                            print(f"In Best Case for N = {size}, it takes '{time_taken}' seconds")
+                                        elif case == 'reverse':
+                                            print(f"In Worst Case for N = {size}, it takes '{time_taken}' seconds")
+                                        else:
+                                            print(f"In Average Case for N = {size}, it takes '{time_taken}' seconds")
 
                                     while True:
                                         # Ask the user if they'd like to input a custom N
@@ -189,7 +194,12 @@ def menu():  # Main menu for selecting sorting algorithm and test cases
                                             start_time = timeit.default_timer()
                                             time_taken = time_sorting_algorithm('bubble_sort', custom_data_set, case, n)
                                             end_time = timeit.default_timer()
-                                            print(f"In {case.capitalize()} Case for N = {n}, it takes '{end_time - start_time}' seconds")
+                                            if case == 'sorted':
+                                                print(f"In Best Case for N = {size}, it takes '{end_time - start_time}' seconds")
+                                            elif case == 'reverse':
+                                                print(f"In Worst Case for N = {size}, it takes '{end_time - start_time}' seconds")
+                                            else:
+                                                print(f"In Average Case for N = {size}, it takes '{end_time - start_time}' seconds")
                                         else:
                                             print("Invalid input")
                             else:
@@ -206,11 +216,16 @@ def menu():  # Main menu for selecting sorting algorithm and test cases
                                 if case_choice == 4:
                                     break
                                 else:
-                                    case = ['best', 'average', 'worst'][case_choice - 1]
+                                    case = ['sorted', 'average', 'reverse'][case_choice - 1]
                                     for size in [100, 1000, 10000]:
                                         data_set = generate_test_data(size, case)
                                         time_taken = time_sorting_algorithm('merge_sort', data_set, case, size)
-                                        print(f"In {case.capitalize()} Case for N = {size}, it takes '{time_taken}' seconds")
+                                        if case == 'sorted':
+                                            print(f"In Best Case for N = {size}, it takes '{time_taken}' seconds")
+                                        elif case == 'reverse':
+                                            print(f"In Average Case for N = {size}, it takes '{time_taken}' seconds")
+                                        else:
+                                            print(f"In Worst Case for N = {size}, it takes '{time_taken}' seconds")
 
                                     while True:
                                         print("Would you like to input another N? [Y/N]")
@@ -224,8 +239,13 @@ def menu():  # Main menu for selecting sorting algorithm and test cases
                                             start_time = timeit.default_timer()
                                             time_taken = time_sorting_algorithm('merge_sort', custom_data_set, case, n)
                                             end_time = timeit.default_timer()
-                                            print(
-                                                f"In {case.capitalize()} Case for N = {n}, it takes '{end_time - start_time}' seconds")
+                                            if case == 'sorted':
+                                                print(f"In Best Case for N = {size}, it takes '{end_time - start_time}' seconds")
+                                            elif case == 'reverse':
+                                                print(
+                                                    f"In Average Case for N = {size}, it takes '{end_time - start_time}' seconds")
+                                            else:
+                                                print(f"In Worst Case for N = {size}, it takes '{end_time - start_time}' seconds")
                                         else:
                                             print("Invalid input")
                             else:
@@ -242,11 +262,16 @@ def menu():  # Main menu for selecting sorting algorithm and test cases
                                 if case_choice == 4:
                                     break
                                 else:
-                                    case = ['best', 'average', 'worst'][case_choice - 1]
+                                    case = ['sorted', 'average', 'reverse'][case_choice - 1]
                                     for size in [100, 1000, 10000]:
                                         data_set = generate_test_data(size, case)
                                         time_taken = time_sorting_algorithm('quick_sort', data_set, case, size)
-                                        print(f"In {case.capitalize()} Case for N = {size}, it takes '{time_taken}' seconds")
+                                        if case == 'sorted':
+                                            print(f"In Worst Case for N = {size}, it takes '{time_taken}' seconds")
+                                        elif case == 'reverse':
+                                            print(f"In Average Case for N = {size}, it takes '{time_taken}' seconds")
+                                        else:
+                                            print(f"In Best Case for N = {size}, it takes '{time_taken}' seconds")
 
                                     while True:
                                         print("Would you like to input another N? [Y/N]")
@@ -260,8 +285,13 @@ def menu():  # Main menu for selecting sorting algorithm and test cases
                                             start_time = timeit.default_timer()
                                             time_taken = time_sorting_algorithm('quick_sort', custom_data_set, case, n)
                                             end_time = timeit.default_timer()
-                                            print(
-                                                f"In {case.capitalize()} Case for N = {n}, it takes '{end_time - start_time}' seconds")
+                                            if case == 'sorted':
+                                                print(f"In Worst Case for N = {size}, it takes '{end_time - start_time}' seconds")
+                                            elif case == 'reverse':
+                                                print(
+                                                    f"In Average Case for N = {size}, it takes '{end_time - start_time}' seconds")
+                                            else:
+                                                print(f"In Best Case for N = {size}, it takes '{end_time - start_time}' seconds")
                                         else:
                                             print("Invalid input")
                             else:
@@ -278,11 +308,16 @@ def menu():  # Main menu for selecting sorting algorithm and test cases
                                 if case_choice == 4:
                                     break
                                 else:
-                                    case = ['best', 'average', 'worst'][case_choice - 1]
+                                    case = ['sorted', 'average', 'reverse'][case_choice - 1]
                                     for size in [100, 1000, 10000]:
                                         data_set = generate_test_data(size, case)
                                         time_taken = time_sorting_algorithm('radix_sort', data_set, case, size)
-                                        print(f"In {case.capitalize()} Case for N = {size}, it takes '{time_taken}' seconds")
+                                        if case == 'sorted':
+                                            print(f"In Best Case for N = {size}, it takes '{time_taken}' seconds")
+                                        elif case == 'reverse':
+                                            print(f"In Average Case for N = {size}, it takes '{time_taken}' seconds")
+                                        else:
+                                            print(f"In Worst Case for N = {size}, it takes '{time_taken}' seconds")
 
                                     while True:
                                         print("Would you like to input another N? [Y/N]")
@@ -296,7 +331,13 @@ def menu():  # Main menu for selecting sorting algorithm and test cases
                                             start_time = timeit.default_timer()
                                             time_taken = time_sorting_algorithm('radix_sort', custom_data_set, case, n)
                                             end_time = timeit.default_timer()
-                                            print(f"In {case.capitalize()} Case for N = {n}, it takes '{end_time - start_time}' seconds")
+                                            if case == 'sorted':
+                                                print(f"In Best Case for N = {size}, it takes '{end_time - start_time}' seconds")
+                                            elif case == 'reverse':
+                                                print(
+                                                    f"In Average Case for N = {size}, it takes '{end_time - start_time}' seconds")
+                                            else:
+                                                print(f"In Worst Case for N = {size}, it takes '{end_time - start_time}' seconds")
                                         else:
                                             print("Invalid input")
                             else:
