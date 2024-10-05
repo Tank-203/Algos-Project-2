@@ -1,0 +1,5 @@
+Algorithm: radix_sort
+Case: worst
+Size: 5000
+Time taken: 0.008525800018105656 seconds
+

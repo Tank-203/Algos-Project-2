@@ -1,0 +1,5 @@
+Algorithm: quick_sort
+Case: average
+Size: 50000
+Time taken: 0.08434200001647696 seconds
+
