@@ -1,0 +1,5 @@
+Algorithm: merge_sort
+Case: best
+Size: 50000
+Time taken: 0.0821336000226438 seconds
+
