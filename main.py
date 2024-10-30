@@ -135,7 +135,7 @@ def time_sorting_algorithm(algorithm, arr, case, size):  # Times the sorting alg
     end_time = timeit.default_timer()  # Stop the timer
 
     # Save the results to a text file
-    file_name = f"files/{current_time}.txt"
+    file_name = f"{current_time}.txt"
     with open(file_name, 'a') as file:
         file.write(f"Algorithm: {algorithm}\n")
         file.write(f"Case: {case}\n")
